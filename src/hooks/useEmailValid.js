@@ -1,22 +1,38 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 export const useEmailValid = () => {
     const [isValid, setIsValid] = useState(' ')
+    let typingTimer;
+
+    const handleCleareTimeout = ()=>{
+        clearTimeout(typingTimer)
+    }
+
     const handleEmailChange = (e) => { 
-        axios({
-            method: 'get',
-            url: `/api/email-validator.php?email=${e.target.value}`,
-        })
-            .then(function ({ data }) {
-                setIsValid(data.validation_status)
-                console.log(data)
+        console.log(e.target.value)
+        clearTimeout(typingTimer)
+        const email = encodeURIComponent(e.target.value)
+
+        typingTimer = setTimeout(()=>{ 
+            axios({
+                method: 'get',
+                url: `/api/email-validator.php?email=${email}`,
             })
-            .catch(err => console.log(err));
+                .then(function ({ data }) {
+                    setIsValid(data.validation_status)
+                    console.log(data)
+                })
+                .catch(err => console.log(err));
+        },1000)
+
+        
+        
     }
 
     return {
         isValid,
-        handleEmailChange
+        handleEmailChange,
+        handleCleareTimeout
     }
 }

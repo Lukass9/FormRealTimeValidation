@@ -18,7 +18,7 @@ function App() {
   } = useForm({mode: "onChange"});
   const onSubmit = ({name, surname, email, birthDate,  gender}) => isValid ? window.alert(name + " " + surname + " " + birthDate + " " + email + " " + gender ) : null;
 
-  const {isValid, handleEmailChange} = useEmailValid();
+  const {isValid, handleEmailChange, handleCleareTimeout} = useEmailValid();
   
   return (
     <Form onSubmit={handleSubmit(onSubmit)} >
@@ -33,7 +33,10 @@ function App() {
           <Error> Name must be more than 3 characters </Error> : null}
         <Row>
           <FormField  label="Birth date" name="birthDate" id="birthDate" type="date" {...register('birthDate', { required: true })} />
-          <FormField  label="Email" name="email" id="email" type="email" {...register('email', { required: true, onChange: (e) => handleEmailChange(e) })}/>
+          <FormField  label="Email" name="email" id="email" type="email" {...register('email', { required: true, onChange: (e) => {
+            handleCleareTimeout();
+            handleEmailChange(e)
+            }  })}/>
           {/* <FormField  label="Email" name="email" id="email" type="email" {...register('email', { required: true, pattern: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i })}/> */}
 
         </Row>
