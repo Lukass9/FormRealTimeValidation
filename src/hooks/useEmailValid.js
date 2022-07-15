@@ -10,24 +10,19 @@ export const useEmailValid = () => {
     }
 
     const handleEmailChange = (e) => { 
-        console.log(e.target.value)
-        clearTimeout(typingTimer)
+        // console.log(e.target.value)
         const email = encodeURIComponent(e.target.value)
-
-        typingTimer = setTimeout(()=>{ 
-            axios({
-                method: 'get',
-                url: `/api/email-validator.php?email=${email}`,
-            })
-                .then(function ({ data }) {
+        axios({
+            method: 'get',
+            url: `/api/email-validator.php?email=${email}`,
+        })
+            .then(function ({ data }) {
+                if(data.email === e.target.value){
                     setIsValid(data.validation_status)
-                    console.log(data)
-                })
-                .catch(err => console.log(err));
-        },1000)
-
-        
-        
+                }
+                // console.log(data)
+            })
+            .catch(err => console.log(err));
     }
 
     return {
